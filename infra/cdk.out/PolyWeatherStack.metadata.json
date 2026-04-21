@@ -1,0 +1,164 @@
+{
+  "/PolyWeatherStack/SsmParameterValue:--aws--service--ami-amazon-linux-latest--al2023-ami-kernel-6.1-x86_64:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter"
+    }
+  ],
+  "/PolyWeatherStack/InstanceId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "InstanceId"
+    }
+  ],
+  "/PolyWeatherStack/VpcId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "VpcId"
+    }
+  ],
+  "/PolyWeatherStack/SsmConnectCommand": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SsmConnectCommand"
+    }
+  ],
+  "/PolyWeatherStack/SsmPortForwardApi": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SsmPortForwardApi"
+    }
+  ],
+  "/PolyWeatherStack/ApiLogGroupName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiLogGroupName"
+    }
+  ],
+  "/PolyWeatherStack/WorkerLogGroupName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WorkerLogGroupName"
+    }
+  ],
+  "/PolyWeatherStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    }
+  ],
+  "/PolyWeatherStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcF6693E13"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/IGW": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcIGWDA9DD034"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/VPCGW": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcVPCGWA99FC7A8"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherSg/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherSg00552A20"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherRole2D0A6D56"
+    }
+  ],
+  "/PolyWeatherStack/ApiLogGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiLogGroup1DEDFC07"
+    }
+  ],
+  "/PolyWeatherStack/WorkerLogGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WorkerLogGroup31FDBE4A"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherInstance/InstanceProfile": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherInstanceInstanceProfile2171B63F"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherInstance/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherInstance5E3A4156"
+    }
+  ],
+  "/PolyWeatherStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/PublicSubnet1/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcPublicSubnet1SubnetD079BB4D"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/PublicSubnet1/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcPublicSubnet1RouteTableF3165F4D"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/PublicSubnet1/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcPublicSubnet1RouteTableAssociation78B1ACB6"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/PublicSubnet1/DefaultRoute": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcPublicSubnet1DefaultRoute14B3BB7D"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/PublicSubnet2/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcPublicSubnet2SubnetBA1348C0"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/PublicSubnet2/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcPublicSubnet2RouteTable63DF2B7E"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/PublicSubnet2/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcPublicSubnet2RouteTableAssociation36595ED2"
+    }
+  ],
+  "/PolyWeatherStack/PolyWeatherVpc/PublicSubnet2/DefaultRoute": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PolyWeatherVpcPublicSubnet2DefaultRoute6278A09D"
+    }
+  ]
+}

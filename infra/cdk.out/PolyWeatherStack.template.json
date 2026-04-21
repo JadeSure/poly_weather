@@ -1,0 +1,499 @@
+{
+ "Resources": {
+  "PolyWeatherVpcF6693E13": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.11.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "poly-weather-vpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/Resource"
+   }
+  },
+  "PolyWeatherVpcPublicSubnet1SubnetD079BB4D": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "ap-southeast-2a",
+    "CidrBlock": "10.11.0.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PolyWeatherVpcF6693E13"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet1/Subnet"
+   }
+  },
+  "PolyWeatherVpcPublicSubnet1RouteTableF3165F4D": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PolyWeatherVpcF6693E13"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet1/RouteTable"
+   }
+  },
+  "PolyWeatherVpcPublicSubnet1RouteTableAssociation78B1ACB6": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "PolyWeatherVpcPublicSubnet1RouteTableF3165F4D"
+    },
+    "SubnetId": {
+     "Ref": "PolyWeatherVpcPublicSubnet1SubnetD079BB4D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "PolyWeatherVpcPublicSubnet1DefaultRoute14B3BB7D": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "PolyWeatherVpcIGWDA9DD034"
+    },
+    "RouteTableId": {
+     "Ref": "PolyWeatherVpcPublicSubnet1RouteTableF3165F4D"
+    }
+   },
+   "DependsOn": [
+    "PolyWeatherVpcVPCGWA99FC7A8"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet1/DefaultRoute"
+   }
+  },
+  "PolyWeatherVpcPublicSubnet2SubnetBA1348C0": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "ap-southeast-2b",
+    "CidrBlock": "10.11.1.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PolyWeatherVpcF6693E13"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet2/Subnet"
+   }
+  },
+  "PolyWeatherVpcPublicSubnet2RouteTable63DF2B7E": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PolyWeatherVpcF6693E13"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet2/RouteTable"
+   }
+  },
+  "PolyWeatherVpcPublicSubnet2RouteTableAssociation36595ED2": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "PolyWeatherVpcPublicSubnet2RouteTable63DF2B7E"
+    },
+    "SubnetId": {
+     "Ref": "PolyWeatherVpcPublicSubnet2SubnetBA1348C0"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet2/RouteTableAssociation"
+   }
+  },
+  "PolyWeatherVpcPublicSubnet2DefaultRoute6278A09D": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "PolyWeatherVpcIGWDA9DD034"
+    },
+    "RouteTableId": {
+     "Ref": "PolyWeatherVpcPublicSubnet2RouteTable63DF2B7E"
+    }
+   },
+   "DependsOn": [
+    "PolyWeatherVpcVPCGWA99FC7A8"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/PublicSubnet2/DefaultRoute"
+   }
+  },
+  "PolyWeatherVpcIGWDA9DD034": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "poly-weather-vpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/IGW"
+   }
+  },
+  "PolyWeatherVpcVPCGWA99FC7A8": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "PolyWeatherVpcIGWDA9DD034"
+    },
+    "VpcId": {
+     "Ref": "PolyWeatherVpcF6693E13"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherVpc/VPCGW"
+   }
+  },
+  "PolyWeatherSg00552A20": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Poly Weather EC2 - outbound-only (SSM access)",
+    "GroupName": "poly-weather-sg",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PolyWeatherVpcF6693E13"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherSg/Resource"
+   }
+  },
+  "PolyWeatherRole2D0A6D56": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ec2.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonSSMManagedInstanceCore"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/CloudWatchAgentServerPolicy"
+       ]
+      ]
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": [
+          "s3:GetEncryptionConfiguration",
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:AbortMultipartUpload",
+          "s3:ListMultipartUploadParts"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "arn:aws:s3:::stax-session-manager-ab2f12c0-4646-405f-a0d5-b24d5e436121",
+          "arn:aws:s3:::stax-session-manager-ab2f12c0-4646-405f-a0d5-b24d5e436121/*"
+         ]
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": "StaxSsmS3Access"
+     }
+    ],
+    "RoleName": "poly-weather-ec2-role"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherRole/Resource"
+   }
+  },
+  "ApiLogGroup1DEDFC07": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/poly-weather/api",
+    "RetentionInDays": 30
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/ApiLogGroup/Resource"
+   }
+  },
+  "WorkerLogGroup31FDBE4A": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/poly-weather/worker",
+    "RetentionInDays": 30
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/WorkerLogGroup/Resource"
+   }
+  },
+  "PolyWeatherInstanceInstanceProfile2171B63F": {
+   "Type": "AWS::IAM::InstanceProfile",
+   "Properties": {
+    "Roles": [
+     {
+      "Ref": "PolyWeatherRole2D0A6D56"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherInstance/InstanceProfile"
+   }
+  },
+  "PolyWeatherInstance5E3A4156": {
+   "Type": "AWS::EC2::Instance",
+   "Properties": {
+    "AvailabilityZone": "ap-southeast-2a",
+    "BlockDeviceMappings": [
+     {
+      "DeviceName": "/dev/xvda",
+      "Ebs": {
+       "DeleteOnTermination": true,
+       "Encrypted": true,
+       "VolumeSize": 20,
+       "VolumeType": "gp3"
+      }
+     },
+     {
+      "DeviceName": "/dev/xvdf",
+      "Ebs": {
+       "DeleteOnTermination": false,
+       "Encrypted": true,
+       "VolumeSize": 50,
+       "VolumeType": "gp3"
+      }
+     }
+    ],
+    "IamInstanceProfile": {
+     "Ref": "PolyWeatherInstanceInstanceProfile2171B63F"
+    },
+    "ImageId": {
+     "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter"
+    },
+    "InstanceType": "t3.small",
+    "NetworkInterfaces": [
+     {
+      "AssociatePublicIpAddress": true,
+      "DeviceIndex": "0",
+      "GroupSet": [
+       {
+        "Fn::GetAtt": [
+         "PolyWeatherSg00552A20",
+         "GroupId"
+        ]
+       }
+      ],
+      "SubnetId": {
+       "Ref": "PolyWeatherVpcPublicSubnet1SubnetD079BB4D"
+      }
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "poly-weather"
+     }
+    ],
+    "UserData": {
+     "Fn::Base64": "#!/bin/bash\n#!/bin/bash\nset -euo pipefail\n\n# ── system packages ────────────────────────────────────────────────────────────\nyum update -y\nyum install -y git python3.11 python3.11-pip\n\n# ── CloudWatch agent ───────────────────────────────────────────────────────────\nyum install -y amazon-cloudwatch-agent\ncat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json <<'CWAGENT'\n{\n  \"logs\": {\n    \"logs_collected\": {\n      \"files\": {\n        \"collect_list\": [\n          {\n            \"file_path\": \"/var/log/poly-weather/api.log\",\n            \"log_group_name\": \"/poly-weather/api\",\n            \"log_stream_name\": \"{instance_id}\",\n            \"timezone\": \"UTC\"\n          },\n          {\n            \"file_path\": \"/var/log/poly-weather/worker.log\",\n            \"log_group_name\": \"/poly-weather/worker\",\n            \"log_stream_name\": \"{instance_id}\",\n            \"timezone\": \"UTC\"\n          }\n        ]\n      }\n    }\n  }\n}\nCWAGENT\n/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \\\n  -a fetch-config -m ec2 \\\n  -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -s\n\n# ── app directory & data volume ────────────────────────────────────────────────\nmkdir -p /opt/poly-weather /var/lib/poly-weather /var/log/poly-weather\n\n# Mount the extra EBS data volume if it is not already formatted/mounted\nDATA_DEVICE=/dev/xvdf\nif ! blkid \"$DATA_DEVICE\" > /dev/null 2>&1; then\n  mkfs -t xfs \"$DATA_DEVICE\"\nfi\nif ! grep -q \"$DATA_DEVICE\" /etc/fstab; then\n  echo \"$DATA_DEVICE /var/lib/poly-weather xfs defaults,nofail 0 2\" >> /etc/fstab\nfi\nmount -a\n\n# ── clone repo ─────────────────────────────────────────────────────────────────\nREPO_DIR=/opt/poly-weather/app\nif [ ! -d \"$REPO_DIR/.git\" ]; then\n  git clone https://github.com/cloudops-shawn/poly_weather.git \"$REPO_DIR\"\nfi\n\ncd \"$REPO_DIR\"\npython3.11 -m pip install -e .\n\n# ── env file – point database at the persistent EBS volume ────────────────────\nmkdir -p /etc/poly-weather\ncat > /etc/poly-weather/.env <<'ENVFILE'\nAPP_ENV=production\nDATABASE_URL=sqlite:////var/lib/poly-weather/weatheredge.db\nLOG_LEVEL=INFO\nSQL_ECHO=false\nTRADING_MODE=paper\nNOAA_AWC_API_BASE=https://aviationweather.gov/api/data\nOPEN_METEO_API_BASE=https://api.open-meteo.com/v1\nOPEN_METEO_ENSEMBLE_API_BASE=https://ensemble-api.open-meteo.com/v1\nPOLYMARKET_API_BASE=https://clob.polymarket.com\nPOLYMARKET_GAMMA_API_BASE=https://gamma-api.polymarket.com\nPOLYGON_RPC_URL=\nPOLYMARKET_PRIVATE_KEY=\nMAX_SINGLE_TRADE_USDC=25\nMAX_DAILY_LOSS_USDC=100\nMAX_CONCURRENT_POSITIONS=20\nMAX_CITY_EXPOSURE_USDC=50\nMAX_MARKET_EXPOSURE_USDC=25\nEXECUTION_SIGNAL_MAX_AGE_MINUTES=15\nSTATIONS_CONFIG_PATH=/opt/poly-weather/app/config/stations.yaml\nLOGGING_CONFIG_PATH=/opt/poly-weather/app/config/logging.json\nENVFILE\nchmod 600 /etc/poly-weather/.env\n\n# ── systemd: API service ───────────────────────────────────────────────────────\ncat > /etc/systemd/system/poly-weather-api.service <<'UNIT'\n[Unit]\nDescription=Poly Weather API (uvicorn)\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nType=simple\nUser=nobody\nGroup=nobody\nWorkingDirectory=/opt/poly-weather/app\nEnvironmentFile=/etc/poly-weather/.env\nExecStart=/usr/local/bin/uvicorn src.api.main:app --host 0.0.0.0 --port 8000\nRestart=on-failure\nRestartSec=30\nStandardOutput=append:/var/log/poly-weather/api.log\nStandardError=append:/var/log/poly-weather/api.log\nReadWritePaths=/var/lib/poly-weather /var/log/poly-weather\n\n[Install]\nWantedBy=multi-user.target\nUNIT\n\n# ── systemd: worker service ────────────────────────────────────────────────────\ncat > /etc/systemd/system/poly-weather-worker.service <<'UNIT'\n[Unit]\nDescription=Poly Weather worker (APScheduler)\nAfter=network-online.target poly-weather-api.service\nWants=network-online.target\n\n[Service]\nType=simple\nUser=nobody\nGroup=nobody\nWorkingDirectory=/opt/poly-weather/app\nEnvironmentFile=/etc/poly-weather/.env\nExecStart=/usr/bin/python3.11 -m src.worker.main\nRestart=on-failure\nRestartSec=30\nStandardOutput=append:/var/log/poly-weather/worker.log\nStandardError=append:/var/log/poly-weather/worker.log\nReadWritePaths=/var/lib/poly-weather /var/log/poly-weather\n\n[Install]\nWantedBy=multi-user.target\nUNIT\n\n# fix ownership so nobody can write to data/log dirs\nchown -R nobody:nobody /var/lib/poly-weather /var/log/poly-weather\n\nsystemctl daemon-reload\nsystemctl enable poly-weather-api poly-weather-worker\nsystemctl start poly-weather-api poly-weather-worker\n"
+    }
+   },
+   "DependsOn": [
+    "PolyWeatherRole2D0A6D56",
+    "PolyWeatherVpcPublicSubnet1DefaultRoute14B3BB7D",
+    "PolyWeatherVpcPublicSubnet1RouteTableAssociation78B1ACB6",
+    "PolyWeatherVpcPublicSubnet2DefaultRoute6278A09D",
+    "PolyWeatherVpcPublicSubnet2RouteTableAssociation36595ED2"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/PolyWeatherInstance/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WOQWvDMAyFf0vvjtelbPfSQykMZpLR61A8tXXrWMGWCcH4v48sScNO+t6TeE+lLN+2cruBPhT651FY08hUM+iHgD58J9SlTOdOi8PFndVBqNhYo+vYOOTRW6miyPgFjcXVX719CKQNsCH3PB7h5Bi9Qz4CYw/DXDOrPTPoW4uORY06esPD0VPs/gr+GScXGJyeIyfOwkArU0XTR8tc1srTxVjMwtI1yPRB12f2wjmLCgNFPwUr8NAiox/FZ+QuchZq4Bu5l5183cn3zT0YU/jo2LQoq2n+ArIKrYZjAQAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PolyWeatherStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter": {
+   "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+   "Default": "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64"
+  },
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Outputs": {
+  "InstanceId": {
+   "Value": {
+    "Ref": "PolyWeatherInstance5E3A4156"
+   }
+  },
+  "VpcId": {
+   "Value": {
+    "Ref": "PolyWeatherVpcF6693E13"
+   }
+  },
+  "SsmConnectCommand": {
+   "Description": "Connect to the instance via SSM (no SSH key needed)",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "aws ssm start-session --target ",
+      {
+       "Ref": "PolyWeatherInstance5E3A4156"
+      }
+     ]
+    ]
+   }
+  },
+  "SsmPortForwardApi": {
+   "Description": "Forward API port 8000 to localhost via SSM",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "aws ssm start-session --target ",
+      {
+       "Ref": "PolyWeatherInstance5E3A4156"
+      },
+      " --document-name AWS-StartPortForwardingSession --parameters portNumber=8000,localPortNumber=8000"
+     ]
+    ]
+   }
+  },
+  "ApiLogGroupName": {
+   "Value": {
+    "Ref": "ApiLogGroup1DEDFC07"
+   }
+  },
+  "WorkerLogGroupName": {
+   "Value": {
+    "Ref": "WorkerLogGroup31FDBE4A"
+   }
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
