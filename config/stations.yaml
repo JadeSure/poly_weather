@@ -1,0 +1,52 @@
+stations:
+  - city_code: london
+    city_name: London
+    icao_code: EGLC
+    country_code: GB
+    timezone_name: Europe/London
+    settlement_unit: C
+    wunderground_station_code: EGLC
+    latitude: 51.5053
+    longitude: 0.0553
+    is_active: true
+  - city_code: seoul
+    city_name: Seoul
+    icao_code: RKSI
+    country_code: KR
+    timezone_name: Asia/Seoul
+    settlement_unit: C
+    wunderground_station_code: RKSI
+    latitude: 37.4602
+    longitude: 126.4407
+    is_active: true
+  - city_code: chicago
+    city_name: Chicago
+    icao_code: KORD
+    country_code: US
+    timezone_name: America/Chicago
+    settlement_unit: F
+    wunderground_station_code: KORD
+    latitude: 41.9742
+    longitude: -87.9073
+    is_active: true
+  - city_code: miami
+    city_name: Miami
+    icao_code: KMIA
+    country_code: US
+    timezone_name: America/New_York
+    settlement_unit: F
+    wunderground_station_code: KMIA
+    latitude: 25.7959
+    longitude: -80.287
+    is_active: true
+  - city_code: paris
+    city_name: Paris
+    icao_code: LFPG
+    country_code: FR
+    timezone_name: Europe/Paris
+    settlement_unit: C
+    wunderground_station_code: LFPG
+    latitude: 49.0097
+    longitude: 2.5479
+    is_active: true
+
