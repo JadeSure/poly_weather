@@ -93,14 +93,25 @@ def infer_city_code(question: str, stations: list[Station]) -> str | None:
     return None
 
 
+def is_highest_temp_market(question: str) -> bool:
+    q = question.lower()
+    if "lowest" in q or "low temp" in q or "minimum" in q:
+        return False
+    return True
+
+
 def is_weather_market_payload(payload: dict, stations: list[Station]) -> bool:
     resolution_source = payload.get("resolutionSource") or ""
     description = payload.get("description") or ""
     question = payload.get("question") or ""
     blob = " ".join([resolution_source, description, question]).lower()
     if "wunderground.com/history/daily" in blob:
+        if not is_highest_temp_market(question):
+            return False
         return True
     if "temperature" in blob or "high temp" in blob:
+        if not is_highest_temp_market(question):
+            return False
         return infer_city_code(question + " " + description, stations) is not None
     return False
 

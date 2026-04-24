@@ -21,6 +21,7 @@ from src.db.models import (
 from src.engine.probability import Bucket, build_bucket_distribution
 from src.engine.rounding import settlement_temperature
 from src.engine.signal_filters import SignalFilterContext, is_tradeable
+from src.market.contract_parser import is_highest_temp_market
 from src.engine.trend_adjustment import (
     TemperatureObservation,
     TrendAdjustmentResult,
@@ -93,6 +94,8 @@ def sync_signals(
     for market in markets:
         if market.forecast_date_local is None or market.forecast_date_local > latest_supported_date:
             continue
+        if not is_highest_temp_market(market.question):
+            continue
         grouped_markets[(market.city_code, market.forecast_date_local, market.bucket_unit)].append(market)
 
     generated = 0
@@ -127,10 +130,11 @@ def build_group_signal_rows(
         return rows
 
     forecast_date_local = markets[0].forecast_date_local
-    market_probabilities = {market.id: load_market_probability(session, market.id) for market in markets}
+    now = utc_now()
+    market_prob_results = {market.id: load_market_probability(session, market.id) for market in markets}
     if station is None:
         return [
-            build_skip_signal(market.id, market_probabilities.get(market.id) or 0.0, "missing_station")
+            build_skip_signal(market.id, _prob_value(market_prob_results.get(market.id)), "missing_station")
             for market in markets
             if market.id is not None
         ]
@@ -138,21 +142,25 @@ def build_group_signal_rows(
     recent_observations = load_recent_observations(session, station.id)
     latest_observation = load_latest_metar_observation(session, station.id)
 
-    ensemble_members = load_latest_daily_forecast_members(
+    forecast_result = load_latest_daily_forecast_members(
         session,
         station_id=station.id,
         forecast_date_local=forecast_date_local,
     )
-    if not ensemble_members:
+    if not forecast_result.members:
         return [
-            build_skip_signal(market.id, market_probabilities.get(market.id) or 0.0, "missing_forecast")
+            build_skip_signal(market.id, _prob_value(market_prob_results.get(market.id)), "missing_forecast")
             for market in markets
             if market.id is not None
         ]
 
+    forecast_age_seconds = None
+    if forecast_result.fetched_at is not None:
+        forecast_age_seconds = (now - ensure_utc(forecast_result.fetched_at)).total_seconds()
+
     unit = markets[0].bucket_unit or station.settlement_unit
     adjusted = apply_market_day_adjustment(
-        ensemble_members_c=ensemble_members,
+        ensemble_members_c=forecast_result.members,
         target_date_local=forecast_date_local,
         timezone_name=station.timezone_name,
         observations=recent_observations,
@@ -160,12 +168,17 @@ def build_group_signal_rows(
     group_probabilities = build_group_probabilities(markets, adjusted.adjusted_members_c, unit)
 
     for market in markets:
-        market_probability = market_probabilities.get(market.id)
+        prob_result = market_prob_results.get(market.id)
         if market.id is None:
             continue
-        if market_probability is None:
+        if prob_result is None:
             rows.append(build_skip_signal(market.id, 0.0, "missing_market_price"))
             continue
+
+        market_probability = prob_result.probability
+        market_age_seconds = None
+        if prob_result.captured_at is not None:
+            market_age_seconds = (now - ensure_utc(prob_result.captured_at)).total_seconds()
 
         bucket_probability_value = group_probabilities.get(market.id)
         if bucket_probability_value is None:
@@ -178,6 +191,7 @@ def build_group_signal_rows(
                 is_liquid=is_liquid_market(session, market.id),
                 is_weather_stale=latest_observation.is_stale if latest_observation else True,
                 station_match_valid=market.station_match_valid,
+                forecast_age_seconds=forecast_age_seconds,
             )
         )
         decision = generate_signal(
@@ -199,6 +213,8 @@ def build_group_signal_rows(
                 trend_result=adjusted,
                 latest_observation=latest_observation,
                 group_size=len(markets),
+                forecast_age_seconds=forecast_age_seconds,
+                market_age_seconds=market_age_seconds,
             )
         )
     return rows
@@ -286,6 +302,10 @@ def should_persist_signal(
     return False
 
 
+def _prob_value(result: MarketProbabilityResult | None) -> float:
+    return result.probability if result is not None else 0.0
+
+
 def build_signal_row(
     market: Market,
     model_probability: float,
@@ -297,6 +317,8 @@ def build_signal_row(
     trend_result: TrendAdjustmentResult,
     latest_observation: MetarObservation | None,
     group_size: int,
+    forecast_age_seconds: float | None = None,
+    market_age_seconds: float | None = None,
 ) -> Signal:
     return Signal(
         market_id=market.id,
@@ -317,6 +339,8 @@ def build_signal_row(
                 "recent_trend_c_per_hour": round(trend_result.recent_trend_c_per_hour, 4),
                 "applied_adjustment_c": round(trend_result.applied_adjustment_c, 4),
                 "applied_floor_c": trend_result.applied_floor_c,
+                "forecast_age_seconds": round(forecast_age_seconds) if forecast_age_seconds is not None else None,
+                "market_age_seconds": round(market_age_seconds) if market_age_seconds is not None else None,
             },
             ensure_ascii=True,
         ),
@@ -355,7 +379,13 @@ def apply_observation_floor(
     return [max(value, latest_observation_c) for value in ensemble_members_c]
 
 
-def load_market_probability(session: Session, market_id: int | None) -> float | None:
+@dataclass(slots=True)
+class MarketProbabilityResult:
+    probability: float
+    captured_at: datetime | None
+
+
+def load_market_probability(session: Session, market_id: int | None) -> MarketProbabilityResult | None:
     if market_id is None:
         return None
     snapshot = session.exec(
@@ -365,7 +395,10 @@ def load_market_probability(session: Session, market_id: int | None) -> float | 
     ).first()
     if snapshot is None:
         return None
-    return snapshot.yes_mid or snapshot.yes_bid or snapshot.yes_ask
+    prob = snapshot.yes_mid or snapshot.yes_bid or snapshot.yes_ask
+    if prob is None:
+        return None
+    return MarketProbabilityResult(probability=prob, captured_at=snapshot.captured_at)
 
 
 def load_recent_observations(
@@ -401,20 +434,26 @@ def load_latest_metar_observation(
     ).first()
 
 
+@dataclass(slots=True)
+class ForecastMembersResult:
+    members: list[float]
+    fetched_at: datetime | None
+
+
 def load_latest_daily_forecast_members(
     session: Session,
     station_id: int | None,
     forecast_date_local,
-) -> list[float]:
+) -> ForecastMembersResult:
     if station_id is None or forecast_date_local is None:
-        return []
+        return ForecastMembersResult(members=[], fetched_at=None)
     latest_run = session.exec(
         select(EnsembleRun)
         .where(EnsembleRun.station_id == station_id)
         .order_by(EnsembleRun.fetched_at.desc())
     ).first()
     if latest_run is None:
-        return []
+        return ForecastMembersResult(members=[], fetched_at=None)
     rows = session.exec(
         select(EnsembleForecast)
         .where(
@@ -423,7 +462,10 @@ def load_latest_daily_forecast_members(
         )
         .order_by(EnsembleForecast.member_index.asc())
     ).all()
-    return [row.max_temp_c for row in rows]
+    return ForecastMembersResult(
+        members=[row.max_temp_c for row in rows],
+        fetched_at=latest_run.fetched_at,
+    )
 
 
 def is_liquid_market(session: Session, market_id: int | None, minimum_depth_usdc: float = 50.0) -> bool:

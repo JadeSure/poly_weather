@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
+MAX_FORECAST_AGE_HOURS = 24
+
 
 @dataclass(slots=True)
 class SignalFilterContext:
@@ -8,6 +10,7 @@ class SignalFilterContext:
     is_liquid: bool
     is_weather_stale: bool
     station_match_valid: bool
+    forecast_age_seconds: float | None = None
 
 
 def is_tradeable(
@@ -23,5 +26,7 @@ def is_tradeable(
         return False, "weather_data_stale"
     if not context.station_match_valid:
         return False, "station_mapping_invalid"
+    if context.forecast_age_seconds is not None and context.forecast_age_seconds > MAX_FORECAST_AGE_HOURS * 3600:
+        return False, "forecast_stale"
     return True, "ok"
 

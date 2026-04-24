@@ -18,7 +18,31 @@ from src.db.models import (
 router = APIRouter(prefix="/weather", tags=["weather"])
 
 
-@router.get("/stations")
+@router.get(
+    "/stations",
+    summary="列出所有气象站",
+    description=(
+        "返回系统中所有活跃气象站及其最新 METAR 地面观测数据。\n\n"
+        "每个城市绑定一个 ICAO 气象站（通常为该城市主要国际机场），用于获取实时气温观测。"
+        "气象站的选择需要与 Polymarket 合约中指定的结算数据源 (Weather Underground) 使用的站点保持一致，"
+        "否则模型预测温度与结算温度可能存在系统性偏差。\n\n"
+        "**响应顶层结构：** `{\"data\": [...], \"error\": null}`\n\n"
+        "**data[] 中每个对象的字段：**\n\n"
+        "| 字段 | 类型 | 说明 |\n"
+        "| --- | --- | --- |\n"
+        "| `city_code` | string | 城市唯一标识符，全小写英文，如 `chicago`、`london`、`seoul`、`paris`、`miami`。系统各处统一使用此值关联数据 |\n"
+        "| `city_name` | string | 城市显示名称，如 `Chicago`、`London` |\n"
+        "| `icao_code` | string | ICAO 四字母机场代码，如 `KORD`（芝加哥奥黑尔）、`EGLC`（伦敦城市机场）、`RKSI`（首尔仁川）。此代码决定系统从 NOAA AWC 获取 METAR/TAF 数据的站点 |\n"
+        "| `settlement_unit` | string | Polymarket 合约使用的温度单位：`F`（华氏度，用于美国城市 Chicago/Miami）或 `C`（摄氏度，用于 London/Paris/Seoul）。模型内部统一使用摄氏度计算，输出时按此单位转换 |\n"
+        "| `latest_observation` | object \\| null | 最新一条 METAR 地面观测数据，null 表示该站尚无观测入库 |\n\n"
+        "**latest_observation 子字段：**\n\n"
+        "| 字段 | 类型 | 说明 |\n"
+        "| --- | --- | --- |\n"
+        "| `observed_at` | string | 观测时间，ISO 8601 格式带 UTC 时区（如 `2026-04-24T12:00:00+00:00`）。METAR 通常每小时发布一次 |\n"
+        "| `temperature_c` | float \\| null | 观测到的气温（摄氏度），null 表示该条 METAR 未包含温度数据（罕见） |\n"
+        "| `is_stale` | boolean | 观测是否过期。若该站最近 3 小时内没有新的 METAR 报文入库，则标记为 `true`。过期观测会导致该站的信号被降级为 SKIP（skip_reason=`weather_data_stale`） |"
+    ),
+)
 def list_stations(session: Session = Depends(session_dep)) -> dict:
     stations = session.exec(select(Station).order_by(Station.city_name)).all()
     data = []
@@ -46,9 +70,29 @@ def list_stations(session: Session = Depends(session_dep)) -> dict:
     return {"data": data, "error": None}
 
 
-@router.get("/taf/latest")
+@router.get(
+    "/taf/latest",
+    summary="获取最新 TAF 预报原始数据",
+    description=(
+        "返回各气象站最新的 TAF（Terminal Aerodrome Forecast）预报，包含原始报文和结构化时段数据。\n\n"
+        "**返回字段说明：**\n"
+        "- `city_code` / `city_name` / `icao_code` — 站点标识\n"
+        "- `latest_taf` — 最新 TAF 报文：\n"
+        "  - `issue_time` — 发布时间 (ISO 8601 UTC)\n"
+        "  - `valid_time_from` / `valid_time_to` — 有效时间范围\n"
+        "  - `raw_taf` — 原始 TAF 报文文本\n"
+        "  - `periods[]` — 各预报时段：\n"
+        "    - `time_from` / `time_to` — 时段起止\n"
+        "    - `fcst_change` — 变化类型（FM/BECMG/TEMPO/PROB30/PROB40）\n"
+        "    - `wind_direction_deg` / `wind_speed_kt` / `wind_gust_kt` — 风况\n"
+        "    - `visibility` — 能见度\n"
+        "    - `weather_string` — 天气现象代码\n"
+        "    - `clouds` — 云层信息 JSON\n"
+        "    - `temperature` — 温度信息 JSON"
+    ),
+)
 def list_latest_taf(
-    city_code: str | None = Query(default=None),
+    city_code: str | None = Query(default=None, description="按城市代码过滤（如 chicago, london）"),
     session: Session = Depends(session_dep),
 ) -> dict:
     statement = select(Station).order_by(Station.city_name)
@@ -60,9 +104,19 @@ def list_latest_taf(
     return {"data": data, "error": None}
 
 
-@router.get("/taf/summary")
+@router.get(
+    "/taf/summary",
+    summary="获取最新 TAF 预报中文摘要",
+    description=(
+        "与 `/taf/latest` 相同数据，额外提供中文翻译摘要。\n\n"
+        "**额外字段：**\n"
+        "- `explanation_zh` — TAF 整体说明\n"
+        "- `summary_lines_zh` — 各时段中文摘要列表\n"
+        "- 各 period 内增加 `change_label_zh`（变化类型中文）和 `summary_zh`（时段完整摘要）"
+    ),
+)
 def list_latest_taf_summary(
-    city_code: str | None = Query(default=None),
+    city_code: str | None = Query(default=None, description="按城市代码过滤（如 chicago, london）"),
     session: Session = Depends(session_dep),
 ) -> dict:
     statement = select(Station).order_by(Station.city_name)
@@ -74,9 +128,51 @@ def list_latest_taf_summary(
     return {"data": data, "error": None}
 
 
-@router.get("/forecast/latest")
+@router.get(
+    "/forecast/latest",
+    summary="获取最新 Ensemble 集合预报原始数据",
+    description=(
+        "返回各站点最新的 Open-Meteo GFS ensemble 集合预报，包含每个成员的逐日最高温原始值。\n\n"
+        "**什么是 Ensemble 预报？** GFS ensemble 预报使用 31 个略有不同的初始条件运行同一个气象模型，"
+        "产生 31 条独立的温度预测轨迹。这些轨迹的分散程度反映了预测的不确定性。"
+        "系统用「落入某温度区间的成员数 / 31」作为该区间的模型概率。\n\n"
+        "**数据新鲜度：** `fetched_at` 是判断预报是否过期的关键字段。"
+        "如果 `fetched_at` 距当前时间超过 24 小时，该预报被视为过期（stale），"
+        "基于此预报生成的所有信号将被强制标记为 SKIP（skip_reason=`forecast_stale`）。"
+        "正常情况下预报每 3 小时刷新一次。\n\n"
+        "**响应顶层结构：** `{\"data\": [...], \"error\": null}`\n\n"
+        "**data[] 中每个对象的字段：**\n\n"
+        "| 字段 | 类型 | 说明 |\n"
+        "| --- | --- | --- |\n"
+        "| `city_code` | string | 城市标识符 |\n"
+        "| `city_name` | string | 城市显示名称 |\n"
+        "| `icao_code` | string | ICAO 站点代码 |\n"
+        "| `latest_forecast` | object \\| null | 最新一次 ensemble 预报运行数据，null 表示该站尚无预报 |\n\n"
+        "**latest_forecast 子字段：**\n\n"
+        "| 字段 | 类型 | 说明 |\n"
+        "| --- | --- | --- |\n"
+        "| `model_name` | string | 预报模型标识，固定为 `gfs_seamless`（Open-Meteo 的 GFS 全球预报系统） |\n"
+        "| `timezone_name` | string | 站点本地时区 IANA 名称，如 `America/Chicago`、`Asia/Seoul`。用于将 UTC 时间序列转换为本地日期以计算「本地日最高温」 |\n"
+        "| `forecast_days` | integer | 预报覆盖的未来天数，默认 7 天 |\n"
+        "| `fetched_at` | string | 此次预报数据从 Open-Meteo API 抓取的时间 (ISO 8601 UTC)。**重要：若此值距今超过 24 小时，意味着预报数据可能过期，信号可信度下降** |\n"
+        "| `temperature_unit` | string | 温度单位，固定为 `C`（摄氏度）。系统内部统一用摄氏度，展示和结算时再按 `settlement_unit` 转换 |\n"
+        "| `days` | array | 按本地日期分组的预报数据 |\n\n"
+        "**days[] 中每个对象的字段：**\n\n"
+        "| 字段 | 类型 | 说明 |\n"
+        "| --- | --- | --- |\n"
+        "| `forecast_date_local` | string | 本地日期 (YYYY-MM-DD)，如 `2026-04-25`。这是 Polymarket 合约对应的结算日期 |\n"
+        "| `member_count` | integer | 该日的 ensemble 成员数，通常为 31（1 个控制运行 + 30 个扰动成员） |\n"
+        "| `members` | array | 各成员的预测数据 |\n\n"
+        "**members[] 中每个对象的字段：**\n\n"
+        "| 字段 | 类型 | 说明 |\n"
+        "| --- | --- | --- |\n"
+        "| `member_index` | integer | 成员编号：0 = 控制运行（control run，使用最佳估计初始条件），1-30 = 扰动成员（perturbed members，初始条件有微小随机扰动） |\n"
+        "| `member_name` | string | Open-Meteo 变量名：`temperature_2m`（控制运行）或 `temperature_2m_member01` ~ `temperature_2m_member30` |\n"
+        "| `max_temp_c` | float | 该成员在该日期的预测日最高温（摄氏度）。计算方式：取该成员该日期所有小时值中的最大值 |"
+    ),
+)
 def list_latest_forecast(
-    city_code: str | None = Query(default=None),
+    city_code: str | None = Query(default=None, description="按城市代码过滤（如 chicago, london）"),
     session: Session = Depends(session_dep),
 ) -> dict:
     statement = select(Station).order_by(Station.city_name)
@@ -88,9 +184,43 @@ def list_latest_forecast(
     return {"data": data, "error": None}
 
 
-@router.get("/forecast/summary")
+@router.get(
+    "/forecast/summary",
+    summary="获取 Ensemble 集合预报统计摘要",
+    description=(
+        "返回 ensemble 预报的统计摘要视图。与 `/forecast/latest` 使用相同数据源，"
+        "但不返回每个成员的原始值，而是返回聚合统计量（均值、中位数、分位数等），便于快速评估预报分布。\n\n"
+        "**响应顶层结构：** `{\"data\": [...], \"error\": null}`\n\n"
+        "**data[] 顶层字段：** 同 `/forecast/latest`（city_code, city_name, icao_code, latest_forecast）\n\n"
+        "**latest_forecast 子字段：**\n\n"
+        "| 字段 | 类型 | 说明 |\n"
+        "| --- | --- | --- |\n"
+        "| `model_name` | string | 预报模型标识，固定 `gfs_seamless` |\n"
+        "| `timezone_name` | string | 站点本地时区 |\n"
+        "| `forecast_days` | integer | 预报覆盖天数 |\n"
+        "| `fetched_at` | string | 预报抓取时间 (ISO 8601 UTC) |\n"
+        "| `temperature_unit` | string | 温度单位，固定 `C` |\n"
+        "| `explanation_zh` | string | Ensemble 摘要的中文说明文本 |\n"
+        "| `days` | array | 按日期分组的统计数据 |\n"
+        "| `summary_lines_zh` | array[string] | 所有日期的中文摘要列表，方便批量展示 |\n\n"
+        "**days[] 中每个对象的字段：**\n\n"
+        "| 字段 | 类型 | 说明 |\n"
+        "| --- | --- | --- |\n"
+        "| `forecast_date_local` | string | 本地日期 (YYYY-MM-DD) |\n"
+        "| `member_count` | integer | 参与统计的 ensemble 成员数（通常 31） |\n"
+        "| `avg_max_temp_c` | float | 所有成员日最高温的**算术平均值**（摄氏度）。代表模型的「共识预测」 |\n"
+        "| `median_max_temp_c` | float | **中位数**，即第 16 个成员的值。比均值更抗异常值 |\n"
+        "| `p10_max_temp_c` | float | **10% 分位数**，即偏冷情景下的温度。90% 的成员预测高于此值 |\n"
+        "| `p90_max_temp_c` | float | **90% 分位数**，即偏热情景下的温度。90% 的成员预测低于此值 |\n"
+        "| `min_max_temp_c` | float | 所有成员中的**最低预测值**，代表极端偏冷情景 |\n"
+        "| `max_max_temp_c` | float | 所有成员中的**最高预测值**，代表极端偏热情景 |\n"
+        "| `summary_zh` | string | 该日的中文摘要，格式如：「2026-04-25 的日最高温 ensemble 摘要：共 31 个成员，均值 16.25C，中位数 15.9C，...」 |\n\n"
+        "**如何使用：** p10-p90 区间覆盖了 80% 的可能性。如果某个 Polymarket bucket 完全落在 p10 以下或 p90 以上，"
+        "说明该 bucket 有很高/很低的概率发生，可与市场价格对比寻找 edge。"
+    ),
+)
 def list_latest_forecast_summary(
-    city_code: str | None = Query(default=None),
+    city_code: str | None = Query(default=None, description="按城市代码过滤（如 chicago, london）"),
     session: Session = Depends(session_dep),
 ) -> dict:
     statement = select(Station).order_by(Station.city_name)

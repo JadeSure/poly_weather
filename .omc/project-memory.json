@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1776156236884,
+  "lastScanned": 1777033747860,
   "projectRoot": "/Users/shawnwang/repos/personal/polymarket_weather",
   "techStack": {
     "languages": [
@@ -57,7 +57,7 @@
       "path": "config",
       "purpose": "Configuration files",
       "fileCount": 2,
-      "lastAccessed": 1776156236871,
+      "lastAccessed": 1777033747820,
       "keyFiles": [
         "logging.json",
         "stations.yaml"
@@ -66,8 +66,8 @@
     "docs": {
       "path": "docs",
       "purpose": "Documentation",
-      "fileCount": 5,
-      "lastAccessed": 1776156236872,
+      "fileCount": 6,
+      "lastAccessed": 1777033747821,
       "keyFiles": [
         "README.md",
         "architecture.md",
@@ -80,7 +80,7 @@
       "path": "src",
       "purpose": "Source code",
       "fileCount": 1,
-      "lastAccessed": 1776156236872,
+      "lastAccessed": 1777033747821,
       "keyFiles": [
         "__init__.py"
       ]
@@ -88,21 +88,21 @@
     "tests": {
       "path": "tests",
       "purpose": "Test files",
-      "fileCount": 12,
-      "lastAccessed": 1776156236873,
+      "fileCount": 15,
+      "lastAccessed": 1777033747822,
       "keyFiles": [
         "__init__.py",
+        "test_cleanup.py",
         "test_contract_parser.py",
         "test_ensemble_fetcher.py",
-        "test_market_fetcher.py",
-        "test_metar_parser.py"
+        "test_market_fetcher.py"
       ]
     },
     "weatheredge.egg-info": {
       "path": "weatheredge.egg-info",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1776156236874,
+      "lastAccessed": 1777033747823,
       "keyFiles": [
         "PKG-INFO",
         "SOURCES.txt",
@@ -115,7 +115,7 @@
       "path": "src/api",
       "purpose": "API routes",
       "fileCount": 3,
-      "lastAccessed": 1776156236875,
+      "lastAccessed": 1777033747824,
       "keyFiles": [
         "__init__.py",
         "deps.py",
@@ -126,7 +126,7 @@
       "path": "src/data",
       "purpose": "Data files",
       "fileCount": 5,
-      "lastAccessed": 1776156236875,
+      "lastAccessed": 1777033747825,
       "keyFiles": [
         "__init__.py",
         "awc_client.py",
@@ -136,303 +136,207 @@
   },
   "hotPaths": [
     {
-      "path": "src/worker/main.py",
-      "accessCount": 10,
-      "lastAccessed": 1776160117535,
-      "type": "file"
-    },
-    {
-      "path": "src/worker/jobs.py",
-      "accessCount": 10,
-      "lastAccessed": 1776160118051,
-      "type": "file"
-    },
-    {
-      "path": "src/market/market_fetcher.py",
-      "accessCount": 9,
-      "lastAccessed": 1776160118477,
-      "type": "file"
-    },
-    {
-      "path": "tests/test_market_fetcher.py",
-      "accessCount": 7,
-      "lastAccessed": 1776157867213,
-      "type": "file"
-    },
-    {
-      "path": "src/db/runtime.py",
-      "accessCount": 6,
-      "lastAccessed": 1776158194808,
-      "type": "file"
-    },
-    {
-      "path": "src/data/weather_fetcher.py",
-      "accessCount": 4,
-      "lastAccessed": 1776156826284,
-      "type": "file"
-    },
-    {
-      "path": "src/db/models.py",
-      "accessCount": 4,
-      "lastAccessed": 1776158132561,
-      "type": "file"
-    },
-    {
       "path": "src/api/routers/markets.py",
-      "accessCount": 4,
-      "lastAccessed": 1776161701420,
+      "accessCount": 14,
+      "lastAccessed": 1777037120284,
       "type": "file"
     },
     {
-      "path": "README.md",
-      "accessCount": 4,
-      "lastAccessed": 1776161729102,
+      "path": "src/api/routers/weather.py",
+      "accessCount": 12,
+      "lastAccessed": 1777037029980,
       "type": "file"
     },
     {
-      "path": "src/market/polymarket_client.py",
-      "accessCount": 3,
-      "lastAccessed": 1776156788593,
+      "path": "src/api/routers/system.py",
+      "accessCount": 11,
+      "lastAccessed": 1777037236368,
+      "type": "file"
+    },
+    {
+      "path": "src/engine/signal_generator.py",
+      "accessCount": 10,
+      "lastAccessed": 1777035000604,
+      "type": "file"
+    },
+    {
+      "path": "src/api/routers/signals.py",
+      "accessCount": 10,
+      "lastAccessed": 1777037198168,
+      "type": "file"
+    },
+    {
+      "path": "src",
+      "accessCount": 7,
+      "lastAccessed": 1777034693657,
+      "type": "directory"
+    },
+    {
+      "path": "src/api/routers/risk.py",
+      "accessCount": 7,
+      "lastAccessed": 1777037256488,
+      "type": "file"
+    },
+    {
+      "path": "src/api/routers/positions.py",
+      "accessCount": 6,
+      "lastAccessed": 1777036937515,
+      "type": "file"
+    },
+    {
+      "path": "src/engine/ensemble_fetcher.py",
+      "accessCount": 5,
+      "lastAccessed": 1777034804438,
+      "type": "file"
+    },
+    {
+      "path": "src/api/routers/health.py",
+      "accessCount": 5,
+      "lastAccessed": 1777036937760,
+      "type": "file"
+    },
+    {
+      "path": "src/engine/open_meteo_client.py",
+      "accessCount": 4,
+      "lastAccessed": 1777034783826,
       "type": "file"
     },
     {
       "path": "src/market/contract_parser.py",
-      "accessCount": 3,
-      "lastAccessed": 1776157004075,
+      "accessCount": 4,
+      "lastAccessed": 1777034814893,
       "type": "file"
     },
     {
-      "path": ".env.example",
+      "path": "src/engine/signal_filters.py",
+      "accessCount": 4,
+      "lastAccessed": 1777034990884,
+      "type": "file"
+    },
+    {
+      "path": "src/market/market_fetcher.py",
       "accessCount": 3,
-      "lastAccessed": 1776160117235,
+      "lastAccessed": 1777034676004,
+      "type": "file"
+    },
+    {
+      "path": "src/db/models.py",
+      "accessCount": 3,
+      "lastAccessed": 1777034751676,
+      "type": "file"
+    },
+    {
+      "path": "src/worker/jobs.py",
+      "accessCount": 3,
+      "lastAccessed": 1777034758457,
+      "type": "file"
+    },
+    {
+      "path": "src/common/time.py",
+      "accessCount": 3,
+      "lastAccessed": 1777034760595,
       "type": "file"
     },
     {
       "path": "src/api/main.py",
       "accessCount": 3,
-      "lastAccessed": 1776161695767,
+      "lastAccessed": 1777036223932,
       "type": "file"
     },
     {
-      "path": "docs/development-roadmap.md",
+      "path": "src/worker/main.py",
+      "accessCount": 3,
+      "lastAccessed": 1777037433117,
+      "type": "file"
+    },
+    {
+      "path": "src/data/weather_fetcher.py",
       "accessCount": 2,
-      "lastAccessed": 1776156431511,
+      "lastAccessed": 1777034680016,
       "type": "file"
     },
     {
-      "path": "docs/design-principles.md",
+      "path": "src/db/runtime.py",
       "accessCount": 2,
-      "lastAccessed": 1776156431681,
-      "type": "file"
-    },
-    {
-      "path": "config/stations.yaml",
-      "accessCount": 2,
-      "lastAccessed": 1776156442813,
-      "type": "file"
-    },
-    {
-      "path": "src/data/awc_client.py",
-      "accessCount": 2,
-      "lastAccessed": 1776156777704,
-      "type": "file"
-    },
-    {
-      "path": "tests/test_metar_parser.py",
-      "accessCount": 2,
-      "lastAccessed": 1776157093697,
-      "type": "file"
-    },
-    {
-      "path": "src/db/migrations.py",
-      "accessCount": 2,
-      "lastAccessed": 1776157847043,
-      "type": "file"
-    },
-    {
-      "path": "tests/test_cleanup.py",
-      "accessCount": 2,
-      "lastAccessed": 1776158224950,
-      "type": "file"
-    },
-    {
-      "path": "pyproject.toml",
-      "accessCount": 1,
-      "lastAccessed": 1776156360581,
-      "type": "file"
-    },
-    {
-      "path": "docs/architecture.md",
-      "accessCount": 1,
-      "lastAccessed": 1776156361364,
-      "type": "file"
-    },
-    {
-      "path": "docs/data-model.md",
-      "accessCount": 1,
-      "lastAccessed": 1776156364533,
-      "type": "file"
-    },
-    {
-      "path": "docs/modules/signal-engine.md",
-      "accessCount": 1,
-      "lastAccessed": 1776156365272,
-      "type": "file"
-    },
-    {
-      "path": "docs/modules/data-ingestion.md",
-      "accessCount": 1,
-      "lastAccessed": 1776156370161,
-      "type": "file"
-    },
-    {
-      "path": "docs/modules/market-ingestion.md",
-      "accessCount": 1,
-      "lastAccessed": 1776156370315,
-      "type": "file"
-    },
-    {
-      "path": "docs/modules/execution-risk.md",
-      "accessCount": 1,
-      "lastAccessed": 1776156370559,
-      "type": "file"
-    },
-    {
-      "path": "docs/modules/backtest.md",
-      "accessCount": 1,
-      "lastAccessed": 1776156370821,
-      "type": "file"
-    },
-    {
-      "path": "docs/modules/api-backend.md",
-      "accessCount": 1,
-      "lastAccessed": 1776156373399,
-      "type": "file"
-    },
-    {
-      "path": "docs/modules/dashboard.md",
-      "accessCount": 1,
-      "lastAccessed": 1776156373596,
-      "type": "file"
-    },
-    {
-      "path": "src/engine/signal_generator.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156374196,
-      "type": "file"
-    },
-    {
-      "path": "docker-compose.yaml",
-      "accessCount": 1,
-      "lastAccessed": 1776156381227,
+      "lastAccessed": 1777034696458,
       "type": "file"
     },
     {
       "path": "tests/test_signal_generator.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156385967,
+      "accessCount": 2,
+      "lastAccessed": 1777034702239,
       "type": "file"
     },
     {
-      "path": "tests/test_probability.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156386236,
+      "path": "tests/test_multi_city.py",
+      "accessCount": 2,
+      "lastAccessed": 1777034702396,
       "type": "file"
-    },
-    {
-      "path": "src/data/metar_parser.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156437067,
-      "type": "file"
-    },
-    {
-      "path": "src/data/taf_parser.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156437566,
-      "type": "file"
-    },
-    {
-      "path": "src/market/liquidity.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156440464,
-      "type": "file"
-    },
-    {
-      "path": "src/db/session.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156441479,
-      "type": "file"
-    },
-    {
-      "path": "src/common/settings.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156442486,
-      "type": "file"
-    },
-    {
-      "path": "src/common/time.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156448598,
-      "type": "file"
-    },
-    {
-      "path": "src/db/seeds.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156449100,
-      "type": "file"
-    },
-    {
-      "path": "src/common/json_logging.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156463047,
-      "type": "file"
-    },
-    {
-      "path": "src/common/logging.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156463099,
-      "type": "file"
-    },
-    {
-      "path": "tests",
-      "accessCount": 1,
-      "lastAccessed": 1776156713311,
-      "type": "directory"
     },
     {
       "path": "src/common/http_retry.py",
-      "accessCount": 1,
-      "lastAccessed": 1776156765143,
+      "accessCount": 2,
+      "lastAccessed": 1777034758059,
       "type": "file"
     },
     {
-      "path": "tests/test_contract_parser.py",
+      "path": "",
+      "accessCount": 2,
+      "lastAccessed": 1777036203225,
+      "type": "directory"
+    },
+    {
+      "path": "src/engine/probability.py",
       "accessCount": 1,
-      "lastAccessed": 1776157095063,
+      "lastAccessed": 1777033850641,
       "type": "file"
     },
     {
-      "path": "tests/test_weather_fetcher.py",
+      "path": "src/execution/order_executor.py",
       "accessCount": 1,
-      "lastAccessed": 1776157095650,
+      "lastAccessed": 1777033869278,
       "type": "file"
     },
     {
-      "path": "tests/test_weather_api.py",
+      "path": "src/engine/trend_adjustment.py",
       "accessCount": 1,
-      "lastAccessed": 1776157096096,
+      "lastAccessed": 1777033914693,
+      "type": "file"
+    },
+    {
+      "path": "tests/test_market_fetcher.py",
+      "accessCount": 1,
+      "lastAccessed": 1777033939954,
       "type": "file"
     },
     {
       "path": "src/engine/rounding.py",
       "accessCount": 1,
-      "lastAccessed": 1776157101123,
+      "lastAccessed": 1777033946234,
       "type": "file"
     },
     {
-      "path": "tests/test_multi_city.py",
+      "path": "src/api",
       "accessCount": 1,
-      "lastAccessed": 1776157153653,
+      "lastAccessed": 1777034690868,
+      "type": "directory"
+    },
+    {
+      "path": "src/market/polymarket_client.py",
+      "accessCount": 1,
+      "lastAccessed": 1777034693759,
+      "type": "file"
+    },
+    {
+      "path": "src/data/awc_client.py",
+      "accessCount": 1,
+      "lastAccessed": 1777034699730,
+      "type": "file"
+    },
+    {
+      "path": "src/common/settings.py",
+      "accessCount": 1,
+      "lastAccessed": 1777037433874,
       "type": "file"
     }
   ],

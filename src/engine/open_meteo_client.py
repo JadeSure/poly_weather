@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import httpx
 
+from src.common.http_retry import request_with_retry
+
 
 class OpenMeteoEnsembleClient:
     def __init__(
@@ -31,19 +33,24 @@ class OpenMeteoEnsembleClient:
             "timezone": timezone_name,
         }
         if self._http_client is not None:
-            response = await self._http_client.get(
+            response = await request_with_retry(
+                self._http_client,
+                "GET",
                 f"{self.api_base}/ensemble",
                 params=params,
                 headers={"User-Agent": "WeatherEdge/0.1"},
                 timeout=self.timeout_seconds,
             )
-            response.raise_for_status()
             return response.json()
 
         async with httpx.AsyncClient(
             headers={"User-Agent": "WeatherEdge/0.1"},
             timeout=self.timeout_seconds,
         ) as client:
-            response = await client.get(f"{self.api_base}/ensemble", params=params)
-            response.raise_for_status()
+            response = await request_with_retry(
+                client,
+                "GET",
+                f"{self.api_base}/ensemble",
+                params=params,
+            )
             return response.json()

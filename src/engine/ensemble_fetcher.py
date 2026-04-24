@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from datetime import date
 
@@ -8,6 +9,8 @@ from sqlmodel import Session, select
 from src.common.settings import get_settings
 from src.db.models import EnsembleForecast, EnsembleRun, Station
 from src.engine.open_meteo_client import OpenMeteoEnsembleClient
+
+logger = logging.getLogger("weatheredge")
 
 
 @dataclass(slots=True)
@@ -38,18 +41,41 @@ async def sync_forecasts(
     ).all()
 
     results: list[ForecastSyncResult] = []
+    errors: list[str] = []
     for station in stations:
         if station.latitude is None or station.longitude is None:
             continue
-        payload = await forecast_client.fetch_hourly_temperature_ensemble(
-            latitude=station.latitude,
-            longitude=station.longitude,
-            timezone_name=station.timezone_name,
-            model=model_name,
-            forecast_days=forecast_days,
+        try:
+            payload = await forecast_client.fetch_hourly_temperature_ensemble(
+                latitude=station.latitude,
+                longitude=station.longitude,
+                timezone_name=station.timezone_name,
+                model=model_name,
+                forecast_days=forecast_days,
+            )
+            results.append(save_ensemble_payload(session, station, payload, model_name, forecast_days))
+        except Exception:
+            logger.exception(
+                "forecast_station_failed",
+                extra={
+                    "event": "forecast_station_failed",
+                    "station": station.icao_code,
+                    "city": station.city_code,
+                },
+            )
+            errors.append(station.icao_code)
+    if results:
+        session.commit()
+    if errors:
+        logger.warning(
+            "forecast_sync_partial",
+            extra={
+                "event": "forecast_sync_partial",
+                "succeeded": len(results),
+                "failed": len(errors),
+                "failed_stations": errors,
+            },
         )
-        results.append(save_ensemble_payload(session, station, payload, model_name, forecast_days))
-    session.commit()
     return results
 
 

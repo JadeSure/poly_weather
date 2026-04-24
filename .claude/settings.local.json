@@ -6,7 +6,25 @@
       "Bash(.venv/bin/python -m pytest -q)",
       "Bash(.venv/bin/pip install:*)",
       "Bash(.venv/bin/python:*)",
-      "Bash(.venv/bin/ruff check:*)"
+      "Bash(.venv/bin/ruff check:*)",
+      "Bash(grep -n \"timezone.*Z\\\\|Z$\\\\|+00\" /Users/shawnwang/repos/personal/polymarket_weather/src --include=\"*.py\" -r)",
+      "WebFetch(domain:13.211.203.75)",
+      "Bash(curl -s http://13.211.203.75:8000/openapi.json)",
+      "Bash(curl -s http://13.211.203.75:8000/system/stats)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s http://13.211.203.75:8000/signals/summary)",
+      "Bash(curl -s http://13.211.203.75:8000/risk/state)",
+      "Bash(curl -s http://13.211.203.75:8000/positions)",
+      "Bash(curl -s http://13.211.203.75:8000/weather/forecast/latest)",
+      "Bash(curl -s \"http://13.211.203.75:8000/signals?city_code=paris&limit=10\")",
+      "Bash(curl -s \"http://13.211.203.75:8000/signals?city_code=seoul&actionable=true&limit=10\")",
+      "Bash(curl -s http://13.211.203.75:8000/weather/stations)",
+      "Bash(curl -s \"http://13.211.203.75:8000/weather/forecast/summary?city_code=seoul\")",
+      "Bash(python -m pytest tests/ -q)",
+      "Bash(python3 -m pytest tests/ -q)",
+      "Bash(pip3 list:*)",
+      "Bash(.venv/bin/pytest tests/ -q)",
+      "Bash(cat /Users/shawnwang/repos/personal/polymarket_weather/config/*.yaml)"
     ]
   }
 }
