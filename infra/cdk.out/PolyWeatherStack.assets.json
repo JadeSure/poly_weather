@@ -1,16 +1,16 @@
 {
   "version": "53.0.0",
   "files": {
-    "a5373fe3e63d3a2b7a4397e71ae30225dc3f26f41479e646c3124f8eceb17aaf": {
+    "44cd62c808b7dfbe139b9312fe55f6b1fab104044e225c618afc15dc4160e6a3": {
       "displayName": "PolyWeatherStack Template",
       "source": {
         "path": "PolyWeatherStack.template.json",
         "packaging": "file"
       },
       "destinations": {
-        "695418593935-ap-southeast-2-8a7761d0": {
+        "695418593935-ap-southeast-2-764d16b7": {
           "bucketName": "cdk-hnb659fds-assets-695418593935-ap-southeast-2",
-          "objectKey": "a5373fe3e63d3a2b7a4397e71ae30225dc3f26f41479e646c3124f8eceb17aaf.json",
+          "objectKey": "44cd62c808b7dfbe139b9312fe55f6b1fab104044e225c618afc15dc4160e6a3.json",
           "region": "ap-southeast-2",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::695418593935:role/cdk-hnb659fds-file-publishing-role-695418593935-ap-southeast-2"
         }

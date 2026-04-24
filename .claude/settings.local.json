@@ -25,6 +25,12 @@
       "Bash(pip3 list:*)",
       "Bash(.venv/bin/pytest tests/ -q)",
       "Bash(cat /Users/shawnwang/repos/personal/polymarket_weather/config/*.yaml)"
+      "Bash(.venv/bin/ruff check:*)",
+      "Bash(aws ec2 describe-instances *)",
+      "Bash(aws ssm send-command *)",
+      "Bash(aws ssm *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
